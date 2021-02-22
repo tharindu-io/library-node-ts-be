@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model books {
+  id                 Int                  @id
+  customerBorrowals customerBorrowals[]
+}
+
+model customerBorrowalStatuses {
+  id                 Int                  @id
+  name               String               @db.VarChar(50)
+  customerBorrowals customerBorrowals[]
+  @@map("customer_borrowal_statuses")
+}
+
+model customerBorrowals {
+  customerId                 Int                        @map("customer_id")
+  bookId                     Int                        @map("book_id")
+  borrowalTimestamp          DateTime                   @db.Timestamptz(6) @map("borrowal_timestamp")
+  returnTimestamp            DateTime?                  @db.Timestamptz(6) @map("return_timestamp")
+  borrowalStatus             Int                        @map("borrowal_status")
+  books                      books                      @relation(fields: [bookId], references: [id])
+  customerBorrowalStatuses   customerBorrowalStatuses   @relation(fields: [borrowalStatus], references: [id])
+  customers                  customers                  @relation(fields: [customerId], references: [id])
+
+  @@id([customerId, bookId])
+  @@map("customer_borrowals")
+}
+
+model customers {
+  id                 Int                  @id
+  customerBorrowals customerBorrowals[]
+}
