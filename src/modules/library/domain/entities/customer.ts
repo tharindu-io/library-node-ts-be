@@ -70,13 +70,7 @@ export default class Customer {
         }
 
         // do persist or other actions outside of the domain layer
-        const borrowBookResponse = this._customerBorrowalService.borrowBookByCustomer(book.getId(), this._id);
-
-        // if (borrowBookResponse.isFailure()) {
-        //     return borrowBookResponse.forward();
-        // }
-
-        return borrowBookResponse.forward();
+        return this._customerBorrowalService.borrowBookByCustomer(book.getId(), this._id).forward();
     }
 
     public return(book: Book): Result<BookDoesntExistError | BookAlreadyBorrowedError
