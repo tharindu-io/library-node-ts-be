@@ -1,3 +1,3 @@
 import DomainError from "../domain-error";
 
-export class CustomerIdError extends DomainError {}
+export default class CustomerIdError extends DomainError {}

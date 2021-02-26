@@ -1,3 +1,3 @@
 import DomainError from '../domain-error';
 
-export class BookAlreadyBorrowedError extends DomainError {}
+export default class BookAlreadyBorrowedError extends DomainError {}
