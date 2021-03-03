@@ -1,0 +1,36 @@
+[
+  {
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "postgres",
+    "password": "root",
+    "database": "lib1",
+    "logging": false,
+    "migrationsTableName": "_typeorm_migrations",
+    "synchronize": false,
+    "migrations": ["dist/modules/library/infra/data/db-migrations/*.js"],
+    "entities": [
+      "dist/modules/library/infra/data/entities/**/*.js"
+    ],
+    "cli": {
+      "migrationsDir": "src/modules/library/infra/data/db-migrations/"
+    }
+  },
+  {
+    "name": "seed",
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "postgres",
+    "password": "root",
+    "database": "lib1",
+    "logging": false,
+    "synchronize": false,
+    "migrationsTableName": "_typeorm_seed",
+    "migrations": ["dist/modules/library/infra/data/db-seed/*.js"],
+    "cli": {
+      "migrationsDir": "src/modules/library/infra/data/db-seed/"
+    }
+  }
+]
