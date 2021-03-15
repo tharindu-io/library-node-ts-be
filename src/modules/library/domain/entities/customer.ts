@@ -11,12 +11,12 @@ export default class Customer {
         this._customerId = new CustomerId(id);
         this._borrowalLimit = borrowalLimit;
     }
-    
-    borrowalLimit(): number {
-        return this._borrowalLimit;
-    }
 
-    customerId(): number {
-        return this._customerId.id;
-    }
+	public get customerId(): CustomerId {
+		return this._customerId;
+	}
+
+	public get borrowalLimit(): number {
+		return this._borrowalLimit;
+	}
 }
