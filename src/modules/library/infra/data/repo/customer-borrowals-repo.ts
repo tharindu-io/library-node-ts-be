@@ -1,7 +1,9 @@
-import { getRepository } from 'typeorm';
+import { getRepository, In } from 'typeorm';
 import { Result } from 'typescript-result';
 import CustomerBorrowal from '../entities/customer-borrowal';
+import CustomerBorrowalReturnDto from './dto/customer-borrowal-return-dto';
 import ICustomerBorrowalsRepo from './i-customer-borrowals-repo';
+import BorrowalStatus from '../entities/borrowal-status';
 
 export default class CustomerBorrowalsRepo implements ICustomerBorrowalsRepo {
 
@@ -11,6 +13,8 @@ export default class CustomerBorrowalsRepo implements ICustomerBorrowalsRepo {
      */
     async getBookLatestBorrowal(bookId: number): Promise<Result<Error, CustomerBorrowal | undefined>> {
         try {
+            // todo validations
+
             const customerBorrowal = await getRepository(CustomerBorrowal)
                 .createQueryBuilder("c1")
                 .innerJoin(qb => qb
@@ -36,6 +40,8 @@ export default class CustomerBorrowalsRepo implements ICustomerBorrowalsRepo {
      */
     async getActiveCustomerBorrowalsById(customerId: number): Promise<Result<Error, CustomerBorrowal[]>> {
         try {
+            // todo validations
+
             const customerBorrowal = await getRepository(CustomerBorrowal)
                 .createQueryBuilder("c1")
                 .leftJoinAndSelect("c1.book", "book")
@@ -52,14 +58,37 @@ export default class CustomerBorrowalsRepo implements ICustomerBorrowalsRepo {
     }
 
     /**
-     * save or Update a list of customer borrowals based on id. Done in a single transaction.
+     * save new customer borrowals. Done in a single transaction. this is to be used to create new customer borrowals only.
      * @param customerBorrowals 
      */
-    async saveOrUpdateCustomerBorrowals(customerBorrowals: CustomerBorrowal[]): Promise<Result<Error, void>> {
+    async saveNewCustomerBorrowals(customerBorrowals: CustomerBorrowal[]): Promise<Result<Error, void>> {
         try {
+            // todo validate object
+
             await getRepository(CustomerBorrowal).save(customerBorrowals);
             return Result.ok();
 
+        } catch (error) {
+            return Result.error(error);
+        }
+    }
+
+    async saveCustomerBorrowalReturns(customerBorrowalReturnDto: CustomerBorrowalReturnDto): Promise<Result<Error, void>> {
+        try {
+            // todo validate dto
+
+            await getRepository(CustomerBorrowal)
+                .createQueryBuilder()
+                .update(CustomerBorrowal)
+                .set({
+                    returnTimestamp: customerBorrowalReturnDto.returnTimestamp,
+                    borrowalStatus: BorrowalStatus.Returned
+                })
+                .where({ id: In(customerBorrowalReturnDto.id) })
+                .execute();
+            
+            return Result.ok();
+            
         } catch (error) {
             return Result.error(error);
         }

@@ -18,11 +18,11 @@ export default class CustomerBorrowal {
     @ManyToOne(type => Book, book => book.customerBorrowals, { primary: false, nullable: false })
     book!: Book;
 
-    @Column()
-    borrowal_timestamp!: Date;
+    @Column({ name: "borrowal_timestamp" })
+    borrowalTimestamp!: Date;
 
-    @Column()
-    return_timestamp!: Date;
+    @Column({ name: "return_timestamp" })
+    returnTimestamp?: Date;
 
     @JoinColumn({ name: "borrowal_status" })
     @ManyToOne(type => BorrowalStatus, borrowalStatus => borrowalStatus.customerBorrowals)
